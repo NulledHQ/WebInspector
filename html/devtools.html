@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebInspector</title>
+  <link href="https://cdn.jsdelivr.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+  <link href="../styles/styles.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <div class="filters">
+      <input id="url-filter" type="text" placeholder="Filter by URL">
+      <div class="checkbox-container">
+        <input type="checkbox" id="ignore-extensions-checkbox" checked>
+        <label for="ignore-extensions-checkbox">Ignore Extension Requests</label>
+      </div>
+    </div>
+    <div id="request-list" class="request-list">
+      <table>
+        <thead>
+          <tr>
+            <th id="clear-all">X</th>
+            <th>
+              <div class="method-filter-container">
+                <button id="method-filter-button" class="method-filter-button">Methods</button>
+                <div id="method-filter-dropdown" class="method-filter-dropdown">
+                  <ul id="method-filter-list"></ul>
+                </div>
+              </div>
+            </th>
+            <th>Time</th>
+            <th>
+              <div class="type-filter-container">
+                <button id="type-filter-button" class="type-filter-button">Types</button>
+                <div id="type-filter-dropdown" class="type-filter-dropdown">
+                  <ul id="type-filter-list"></ul>
+                </div>
+              </div>
+            </th>
+            <th>
+              <div class="status-filter-container">
+                <button id="status-filter-button" class="status-filter-button">Status</button>
+                <div id="status-filter-dropdown" class="status-filter-dropdown">
+                  <ul id="status-filter-list"></ul>
+                </div>
+              </div>
+            </th>
+            <th>URL</th>
+          </tr>
+        </thead>
+        <tbody id="request-table-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="custom-button" class="custom-button">+</div>
+
+  <div id="image-modal" class="modal image-modal">
+    <div class="close-modal" id="close-image-modal">×</div>
+    <img id="response-image-viewer">
+  </div>
+
+  <div id="custom-modal" class="modal custom-request-modal">
+    <div class="modal-content">
+      <div class="close-modal" id="close-custom-modal">×</div>
+      <h2>Send Custom Request</h2>
+      <form id="custom-request-form">
+        <div class="form-group">
+          <label for="custom-url">URL</label>
+          <input id="custom-url" type="text" placeholder="https://api.example.com/v1/users" required>
+        </div>
+        <div class="form-group">
+          <label for="custom-headers">Headers (one per line)</label>
+          <textarea id="custom-headers" rows="4" placeholder="Content-Type: application/json"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group method-group">
+            <label for="custom-method">Method</label>
+            <select id="custom-method">
+              <option value="GET">GET</option>
+              <option value="POST">POST</option>
+              <option value="PUT">PUT</option>
+              <option value="DELETE">DELETE</option>
+            </select>
+            <div class="form-group">
+              <label>Response Status</label>
+              <input id="custom-response-status" type="text" readonly>
+            </div>
+          </div>
+          <div class="form-group body-group">
+            <div class="label-with-actions">
+              <label for="custom-body">Request Body</label>
+              <div>
+                <button type="button" id="decode-body-btn" class="body-action-btn" title="Decode URL-encoded text">Decode</button>
+                <button type="button" id="encode-body-btn" class="body-action-btn" title="Encode text for URL">Encode</button>
+              </div>
+            </div>
+            <textarea id="custom-body" rows="8" placeholder='{ "key": "value" }'></textarea>
+          </div>
+        </div>
+        <button type="submit">Send Request</button>
+      </form>
+      <div id="response-area" class="response-area">
+        <div class="form-group">
+            <label class="response-title">Response Headers</label>
+            <pre id="custom-response-headers" class="code-block"></pre>
+        </div>
+        <div class="form-group">
+            <label class="response-title">Response Body</label>
+            <pre id="custom-response-body" class="code-block"></pre>
+            <img id="custom-response-image" class="response-image">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="details-modal" class="modal">
+    <div class="modal-content">
+      <div class="close-modal" id="close-details">×</div>
+      <div class="tabs">
+        <div id="tab-request" class="tab active">Request</div>
+        <button id="edit-and-replay-button">Edit & Replay</button>
+      </div>
+      <div id="request-tab-panel">
+        <div class="form-group">
+          <label>URL</label>
+          <input id="details-url" type="text" readonly>
+        </div>
+        <div class="form-row">
+          <div class="form-group method-group">
+            <label>Method</label>
+            <input id="details-method" type="text" readonly>
+            <div class="form-group">
+              <label>Status</label>
+              <input id="details-status" type="text" readonly>
+            </div>
+          </div>
+          <div class="form-group body-group">
+            <label>Request Body</label>
+            <pre id="details-request-body-display" class="code-block"></pre>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Request Headers</label>
+          <pre id="details-request-headers" class="code-block"></pre>
+        </div>
+        <div class="form-group">
+          <label>Response Headers</label>
+          <pre id="details-response-headers" class="code-block"></pre>
+        </div>
+        <div class="form-group">
+          <label>Response Body</label>
+          <pre id="details-response-body" class="code-block"></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="../js/devtools.js"></script>
+</body>
+</html>
